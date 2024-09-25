@@ -17,8 +17,9 @@ import androidx.compose.ui.unit.times
 @Composable
 fun HorizontalSplitScreen(
     modifier: Modifier = Modifier,
-    sliderThickness: Dp = 16.dp,
-    initialPercentage: Float = 0.5f,
+    sliderThickness: Dp = 12.dp,
+    sliderColor: Color = Color.White,
+    initialPercentage: Float = .5f,
     left: @Composable (Dp) -> Unit,
     right: @Composable (Dp) -> Unit,
 ) {
@@ -29,12 +30,13 @@ fun HorizontalSplitScreen(
 
         val offsetX by remember(sliderThickness, containerWidth, offsetPercent) {
             derivedStateOf {
-                offsetPercent.times(containerWidth).coerceIn(0.dp, containerWidth - sliderThickness)
+                offsetPercent.times(containerWidth - sliderThickness).coerceIn(0.dp, containerWidth - sliderThickness)
             }
         }
 
         BoxWithConstraints(
-            modifier = Modifier.width(offsetX + sliderThickness / 2), contentAlignment = Alignment.Center
+            modifier = Modifier.width(offsetX + sliderThickness / 2),
+            contentAlignment = Alignment.Center
         ) {
             left(maxWidth)
         }
@@ -44,15 +46,16 @@ fun HorizontalSplitScreen(
         ) {
             right(maxWidth)
         }
-
         Box(
-            modifier = Modifier.width(sliderThickness).fillMaxHeight().offset(x = offsetX).background(Color.White)
+            modifier = Modifier.width(sliderThickness).fillMaxHeight().offset(x = offsetX).background(sliderColor)
                 .pointerInput(sliderThickness, containerWidth) {
                     detectDragGestures { change, dragAmount ->
                         change.consume()
+
                         val newOffsetX =
                             (offsetX + dragAmount.x.toDp()).coerceIn(0.dp, containerWidth - sliderThickness)
-                        offsetPercent = (newOffsetX / containerWidth).coerceIn(0f, 1f)
+
+                        offsetPercent = (newOffsetX / (containerWidth - sliderThickness)).coerceIn(0f, 1f)
                     }
                 }, contentAlignment = Alignment.Center
         ) {
