@@ -19,14 +19,23 @@ fun HorizontalSplitScreen(
     modifier: Modifier = Modifier,
     sliderThickness: Dp = 12.dp,
     sliderColor: Color = Color.White,
-    initialPercentage: Float = .5f,
+    initialSliderPercentage: Float = .5f,
+    minSliderPercentage: Float = 0f,
+    maxSliderPercentage: Float = 1f,
     left: @Composable (Dp) -> Unit,
     right: @Composable (Dp) -> Unit,
 ) {
+    require(
+        minSliderPercentage in 0f..1f &&
+                maxSliderPercentage in 0f..1f &&
+                minSliderPercentage < maxSliderPercentage &&
+                initialSliderPercentage in minSliderPercentage..maxSliderPercentage
+    ) { "Invalid percentage values" }
+
     BoxWithConstraints(modifier = modifier) {
         val containerWidth = maxWidth
 
-        var offsetPercent by remember { mutableStateOf(initialPercentage) }
+        var offsetPercent by remember { mutableStateOf(initialSliderPercentage) }
 
         val offsetX by remember(sliderThickness, containerWidth, offsetPercent) {
             derivedStateOf {
@@ -48,14 +57,16 @@ fun HorizontalSplitScreen(
         }
         Box(
             modifier = Modifier.width(sliderThickness).fillMaxHeight().offset(x = offsetX).background(sliderColor)
-                .pointerInput(sliderThickness, containerWidth) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-
+                .pointerInput(sliderThickness, minSliderPercentage, maxSliderPercentage, containerWidth) {
+                    detectDragGestures { _, dragAmount ->
                         val newOffsetX =
                             (offsetX + dragAmount.x.toDp()).coerceIn(0.dp, containerWidth - sliderThickness)
 
-                        offsetPercent = (newOffsetX / (containerWidth - sliderThickness)).coerceIn(0f, 1f)
+                        offsetPercent =
+                            (newOffsetX / (containerWidth - sliderThickness)).coerceIn(
+                                minSliderPercentage,
+                                maxSliderPercentage
+                            )
                     }
                 }, contentAlignment = Alignment.Center
         ) {

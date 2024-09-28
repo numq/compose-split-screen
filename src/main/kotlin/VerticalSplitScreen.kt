@@ -19,14 +19,23 @@ fun VerticalSplitScreen(
     modifier: Modifier = Modifier,
     sliderThickness: Dp = 12.dp,
     sliderColor: Color = Color.White,
-    initialPercentage: Float = .5f,
+    initialSliderPercentage: Float = .5f,
+    minSliderPercentage: Float = 0f,
+    maxSliderPercentage: Float = 1f,
     top: @Composable (Dp) -> Unit,
     bottom: @Composable (Dp) -> Unit,
 ) {
+    require(
+        minSliderPercentage in 0f..1f &&
+                maxSliderPercentage in 0f..1f &&
+                minSliderPercentage < maxSliderPercentage &&
+                initialSliderPercentage in minSliderPercentage..maxSliderPercentage
+    ) { "Invalid percentage values" }
+
     BoxWithConstraints(modifier = modifier) {
         val containerHeight = maxHeight
 
-        var offsetPercent by remember { mutableStateOf(initialPercentage) }
+        var offsetPercent by remember { mutableStateOf(initialSliderPercentage) }
 
         val offsetY by remember(sliderThickness, containerHeight, offsetPercent) {
             derivedStateOf {
@@ -48,14 +57,15 @@ fun VerticalSplitScreen(
         }
         Box(
             modifier = Modifier.height(sliderThickness).fillMaxWidth().offset(y = offsetY).background(sliderColor)
-                .pointerInput(sliderThickness, containerHeight) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-
+                .pointerInput(sliderThickness, minSliderPercentage, maxSliderPercentage, containerHeight) {
+                    detectDragGestures { _, dragAmount ->
                         val newOffsetY =
                             (offsetY + dragAmount.y.toDp()).coerceIn(0.dp, containerHeight - sliderThickness)
 
-                        offsetPercent = (newOffsetY / (containerHeight - sliderThickness)).coerceIn(0f, 1f)
+                        offsetPercent = (newOffsetY / (containerHeight - sliderThickness)).coerceIn(
+                            minSliderPercentage,
+                            maxSliderPercentage
+                        )
                     }
                 }, contentAlignment = Alignment.Center
         ) {
