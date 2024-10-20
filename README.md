@@ -2,8 +2,9 @@
 
 # Compose Split Screen
 
-**_Jetpack Compose split screen component_** is a container component that allows you to split content into two child
+**_Jetpack Compose Split Screen Component_** is a container component that allows you to split content into two child
 components, dynamically changing the size of each of them depending on the slider position. It can be **_horizontal_** or
 **_vertical_**, and also allows you to specify the **_initial_**, **_minimum_** and **_maximum_** slider position.
 
 ![Demonstration](media/demo.gif)
+
