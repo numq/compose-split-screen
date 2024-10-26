@@ -22,14 +22,12 @@ fun VerticalSplitScreen(
     initialSliderPercentage: Float = .5f,
     minSliderPercentage: Float = 0f,
     maxSliderPercentage: Float = 1f,
+    indicator: @Composable () -> Unit = { Icon(Icons.Default.DragIndicator, null) },
     top: @Composable (Dp) -> Unit,
     bottom: @Composable (Dp) -> Unit,
 ) {
     require(
-        minSliderPercentage in 0f..1f &&
-                maxSliderPercentage in 0f..1f &&
-                minSliderPercentage < maxSliderPercentage &&
-                initialSliderPercentage in minSliderPercentage..maxSliderPercentage
+        minSliderPercentage in 0f..1f && maxSliderPercentage in 0f..1f && minSliderPercentage < maxSliderPercentage && initialSliderPercentage in minSliderPercentage..maxSliderPercentage
     ) { "Invalid percentage values" }
 
     BoxWithConstraints(modifier = modifier) {
@@ -44,8 +42,7 @@ fun VerticalSplitScreen(
         }
 
         BoxWithConstraints(
-            modifier = Modifier.height(offsetY + sliderThickness / 2),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.height(offsetY + sliderThickness / 2), contentAlignment = Alignment.Center
         ) {
             top(maxHeight)
         }
@@ -63,13 +60,12 @@ fun VerticalSplitScreen(
                             (offsetY + dragAmount.y.toDp()).coerceIn(0.dp, containerHeight - sliderThickness)
 
                         offsetPercent = (newOffsetY / (containerHeight - sliderThickness)).coerceIn(
-                            minSliderPercentage,
-                            maxSliderPercentage
+                            minSliderPercentage, maxSliderPercentage
                         )
                     }
                 }, contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.DragIndicator, null)
+            indicator()
         }
     }
 }

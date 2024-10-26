@@ -22,14 +22,12 @@ fun HorizontalSplitScreen(
     initialSliderPercentage: Float = .5f,
     minSliderPercentage: Float = 0f,
     maxSliderPercentage: Float = 1f,
+    indicator: @Composable () -> Unit = { Icon(Icons.Default.DragIndicator, null) },
     left: @Composable (Dp) -> Unit,
     right: @Composable (Dp) -> Unit,
 ) {
     require(
-        minSliderPercentage in 0f..1f &&
-                maxSliderPercentage in 0f..1f &&
-                minSliderPercentage < maxSliderPercentage &&
-                initialSliderPercentage in minSliderPercentage..maxSliderPercentage
+        minSliderPercentage in 0f..1f && maxSliderPercentage in 0f..1f && minSliderPercentage < maxSliderPercentage && initialSliderPercentage in minSliderPercentage..maxSliderPercentage
     ) { "Invalid percentage values" }
 
     BoxWithConstraints(modifier = modifier) {
@@ -44,8 +42,7 @@ fun HorizontalSplitScreen(
         }
 
         BoxWithConstraints(
-            modifier = Modifier.width(offsetX + sliderThickness / 2),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.width(offsetX + sliderThickness / 2), contentAlignment = Alignment.Center
         ) {
             left(maxWidth)
         }
@@ -62,15 +59,13 @@ fun HorizontalSplitScreen(
                         val newOffsetX =
                             (offsetX + dragAmount.x.toDp()).coerceIn(0.dp, containerWidth - sliderThickness)
 
-                        offsetPercent =
-                            (newOffsetX / (containerWidth - sliderThickness)).coerceIn(
-                                minSliderPercentage,
-                                maxSliderPercentage
-                            )
+                        offsetPercent = (newOffsetX / (containerWidth - sliderThickness)).coerceIn(
+                            minSliderPercentage, maxSliderPercentage
+                        )
                     }
                 }, contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.DragIndicator, null)
+            indicator()
         }
     }
 }
