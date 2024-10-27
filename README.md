@@ -7,3 +7,15 @@ components, dynamically changing the size of each of them depending on the slide
 or **_vertical_**, and also allows you to specify the **_initial_**, **_minimum_** and **_maximum_** slider position.
 
 ![Demonstration](media/demo.gif)
+
+## Installation
+
+```
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.numq:compose-split-screen:1.0.0")
+}
+```
