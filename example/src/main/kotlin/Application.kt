@@ -8,6 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.singleWindowApplication
+import com.github.numq.composesplitscreen.HorizontalSplitScreen
+import com.github.numq.composesplitscreen.VerticalSplitScreen
 
 fun main() = singleWindowApplication(title = "Split Screen") {
     Row(

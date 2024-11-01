@@ -1,3 +1,5 @@
+package com.github.numq.composesplitscreen
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
@@ -15,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 
 @Composable
-fun VerticalSplitScreen(
+fun HorizontalSplitScreen(
     modifier: Modifier = Modifier,
     sliderThickness: Dp = 12.dp,
     sliderColor: Color = Color.White,
@@ -23,43 +25,43 @@ fun VerticalSplitScreen(
     minSliderPercentage: Float = 0f,
     maxSliderPercentage: Float = 1f,
     indicator: @Composable () -> Unit = { Icon(Icons.Default.DragIndicator, null) },
-    top: @Composable (Dp) -> Unit,
-    bottom: @Composable (Dp) -> Unit,
+    left: @Composable (Dp) -> Unit,
+    right: @Composable (Dp) -> Unit,
 ) {
     require(
         minSliderPercentage in 0f..1f && maxSliderPercentage in 0f..1f && minSliderPercentage < maxSliderPercentage && initialSliderPercentage in minSliderPercentage..maxSliderPercentage
     ) { "Invalid percentage values" }
 
     BoxWithConstraints(modifier = modifier) {
-        val containerHeight = maxHeight
+        val containerWidth = maxWidth
 
         var offsetPercent by remember { mutableStateOf(initialSliderPercentage) }
 
-        val offsetY by remember(sliderThickness, containerHeight, offsetPercent) {
+        val offsetX by remember(sliderThickness, containerWidth, offsetPercent) {
             derivedStateOf {
-                offsetPercent.times(containerHeight - sliderThickness).coerceIn(0.dp, containerHeight - sliderThickness)
+                offsetPercent.times(containerWidth - sliderThickness).coerceIn(0.dp, containerWidth - sliderThickness)
             }
         }
 
         BoxWithConstraints(
-            modifier = Modifier.height(offsetY + sliderThickness / 2), contentAlignment = Alignment.Center
+            modifier = Modifier.width(offsetX + sliderThickness / 2), contentAlignment = Alignment.Center
         ) {
-            top(maxHeight)
+            left(maxWidth)
         }
         BoxWithConstraints(
-            modifier = Modifier.fillMaxSize().padding(top = offsetY + sliderThickness / 2),
+            modifier = Modifier.fillMaxSize().padding(start = offsetX + sliderThickness / 2),
             contentAlignment = Alignment.Center
         ) {
-            bottom(maxHeight)
+            right(maxWidth)
         }
         Box(
-            modifier = Modifier.height(sliderThickness).fillMaxWidth().offset(y = offsetY).background(sliderColor)
-                .pointerInput(sliderThickness, minSliderPercentage, maxSliderPercentage, containerHeight) {
+            modifier = Modifier.width(sliderThickness).fillMaxHeight().offset(x = offsetX).background(sliderColor)
+                .pointerInput(sliderThickness, minSliderPercentage, maxSliderPercentage, containerWidth) {
                     detectDragGestures { _, dragAmount ->
-                        val newOffsetY =
-                            (offsetY + dragAmount.y.toDp()).coerceIn(0.dp, containerHeight - sliderThickness)
+                        val newOffsetX =
+                            (offsetX + dragAmount.x.toDp()).coerceIn(0.dp, containerWidth - sliderThickness)
 
-                        offsetPercent = (newOffsetY / (containerHeight - sliderThickness)).coerceIn(
+                        offsetPercent = (newOffsetX / (containerWidth - sliderThickness)).coerceIn(
                             minSliderPercentage, maxSliderPercentage
                         )
                     }

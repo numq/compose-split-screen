@@ -16,6 +16,6 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.numq:compose-split-screen:1.0.0")
+    implementation("com.github.numq:compose-split-screen:1.0.1")
 }
 ```
