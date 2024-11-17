@@ -44,7 +44,7 @@ fun VerticalSplitScreen(
         }
 
         BoxWithConstraints(
-            modifier = Modifier.height(offsetY + sliderThickness / 2), contentAlignment = Alignment.Center
+            modifier = Modifier.height(offsetY + sliderThickness / 2).fillMaxWidth(), contentAlignment = Alignment.Center
         ) {
             top(maxHeight)
         }

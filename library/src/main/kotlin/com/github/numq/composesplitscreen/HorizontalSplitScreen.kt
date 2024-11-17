@@ -44,7 +44,7 @@ fun HorizontalSplitScreen(
         }
 
         BoxWithConstraints(
-            modifier = Modifier.width(offsetX + sliderThickness / 2), contentAlignment = Alignment.Center
+            modifier = Modifier.width(offsetX + sliderThickness / 2).fillMaxHeight(), contentAlignment = Alignment.Center
         ) {
             left(maxWidth)
         }
